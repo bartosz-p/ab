@@ -1,11 +1,11 @@
-
+/*
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
     var my_url = window.location.href;
     //alert(message.type);
     alert(my_url);
 });
 
-/*
+
 
 // omnibox
 chrome.omnibox.onInputChanged.addListener(function(text, suggest) {

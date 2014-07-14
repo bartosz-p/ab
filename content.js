@@ -1,3 +1,9 @@
+chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+    var my_url = window.location.href;
+    alert(my_url);
+    //console.log();
+});
+
 /*
 
 chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
