@@ -1,4 +1,15 @@
+
 /*
+$(document).ready(function(){
+    $("#button").click(function(){
+        $.get("edu-atoms.appspot.com", function(status) {
+            var ala = status;
+            console.log("ala");
+        });
+    });
+});
+
+
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
     var my_url = window.location.href;
     //alert(message.type);

@@ -1,8 +1,15 @@
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
     var my_url = window.location.href;
-    alert(my_url);
-    //console.log();
+    var my_selector = document.querySelector("#main-header");
+    //my_selector.style.background = "red";
+    my_selector.style.borderColor = "red";
+    my_selector.style.borderWidth = 20;
+    //alert(message.type);
+    $('a').css({'background-color': 'red'});
+    console.log(my_url);
 });
+
+
 
 /*
 

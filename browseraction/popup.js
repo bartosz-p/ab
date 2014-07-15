@@ -4,7 +4,10 @@ window.onload = function() {
             chrome.tabs.sendMessage(tabs[0].id, {type: "color-divs"}, function(response) {});
         });
 	}
-}
+};
+
+
+
 
 /*
 
