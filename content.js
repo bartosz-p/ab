@@ -24,10 +24,22 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
     var imageUrl = chrome.extension.getURL("icons/comments_icon.png");
 
     function PlaceImage(source_x, source_y, imageUrl) {
-        var newImage = document.createElement("img");
-        newImage.setAttribute("src", imageUrl);
+        var newImage = document.createElement("a");
+        newImage.setAttribute("href", "http://www.google.com/");
+        var textNodeArgument = "<img src='" + imageUrl + "'>";
+        //newImage.createTextNode(textNodeArgument);
 
+        newImage.innerHTML = textNodeArgument;
 
+        document.body.appendChild(newImage);
+
+        // This part will set an image position. The function should retrieve pos x and y of a source element as arguments.
+
+        newImage.style.position = "absolute";
+        newImage.style.left = source_x + 'px';
+        newImage.style.top = source_y + 'px'
+
+        //newImage.setAttribute("src", imageUrl);
 
         // This part is done with getBoundingClientRect()
         /*
@@ -39,17 +51,6 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
         //var image_y = imagePosition.top;
         //image_x = source_x;
         //image_y = source_y;
-
-        document.body.appendChild(newImage);
-
-        // This part will set an image position. The function should retrieve pos x and y of a source element as arguments.
-
-        newImage.style.position = "absolute";
-        newImage.style.left = source_x + 'px';
-        newImage.style.top = source_y + 'px';
-
-        //newImage.setAttribute('height', '1px');
-        //newImage.setAttribute('width', '1px');
     }
 
     // Links
@@ -58,8 +59,15 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
         //links[i].style.border = true;
         //links[i].style.borderWidth = "20";
 
+    }
+
+    // Divs
+    for(var j=0; j<divs.length; j++) {
+        //divs[j].style.border = true;
+        //divs[j].style.borderWidth = "20";
+        //divs[j].style.background = "green";
         // Color the element
-        //links[i].style.background = "blue";
+        //divs[j].style.background = "blue";
 
         // Get the position of an element with 'style'
         //var x = links[i].style.left;
@@ -69,7 +77,7 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
 
         // Get the position of an element with getBoundingClientRect
 
-        var position = links[i].getBoundingClientRect();
+        var position = divs[j].getBoundingClientRect();
         var x = position.left;
         var y = position.top;
         y -=32;
@@ -80,13 +88,6 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
 
         //links[i].style.position = "absolute";
         console.log('x: ', x, 'y: ', y);
-    }
-
-    // Divs
-    for(var j=0; j<divs.length; j++) {
-        //divs[j].style.border = true;
-        //divs[j].style.borderWidth = "20";
-        //divs[j].style.background = "green";
     }
 
     // Headers
