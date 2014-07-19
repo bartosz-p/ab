@@ -25,5 +25,8 @@
             "js": ["jquery-1.11.1.min.js", "content.js"]
         }
     ],
-    "permissions": ["tabs"]
+
+    "permissions": ["tabs"],
+
+    "web_accessible_resources": ["icons/*"]
 }
