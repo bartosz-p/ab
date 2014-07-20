@@ -15,8 +15,9 @@
     },
 
     "background": {
-        "scripts": ["background.js"],
-        "persistent": false
+        //"scripts": ["background.js"],
+        "page": "background.html",
+        "persistent": true
     },
 
     "content_scripts": [
@@ -26,7 +27,7 @@
         }
     ],
 
-    "permissions": ["tabs"],
+    "permissions": ["tabs", "background"],
 
     "web_accessible_resources": ["icons/*"]
 }
