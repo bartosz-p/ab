@@ -15,19 +15,21 @@
     },
 
     "background": {
-        //"scripts": ["background.js"],
-        "page": "background.html",
+        "scripts": ["jquery-1.11.1.min.js", "background.js"],
+        //"page": "background.html",
         "persistent": true
     },
 
     "content_scripts": [
         {
             "matches": ["http://*/*", "https://*/*"],
-            "js": ["jquery-1.11.1.min.js", "content.js"]
+            "js": ["jquery-1.11.1.min.js", "content.js"], // "/_ah/channel/jsapi"
+            "run_at" : "document_end"
         }
     ],
 
-    "permissions": ["tabs", "background"],
+    "permissions": ["tabs", "background", "contextMenus"],
 
     "web_accessible_resources": ["icons/*"]
+
 }

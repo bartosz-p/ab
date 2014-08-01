@@ -1,6 +1,6 @@
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
     var my_url = window.location.href;
-    console.log(my_url);
+    //console.log(my_url);
 
     // The following part is a retrieval of data from the server. Most likely will be replaced by GAE Network API
     //$.get("http://www.google.pl/", function(data, textStatus)
@@ -23,18 +23,28 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
         //var textNodeArgument = "<img src='" + imageUrl + "'>";
 
         // TO-DO: The link should point to a specific commenting place which will be fetched from a database
-        //newImage.setAttribute("href", "http://www.google.com/");
-        newImage.className = "blink";
         newImage.src = imageUrl;
         //newImage.innerHTML = textNodeArgument;
-
-        // Add an element to the HTML code
-        document.body.appendChild(newImage);
 
         // Assigning a position of the comments_icon
         newImage.style.position = "absolute";
         newImage.style.left = source_x + 'px';
-        newImage.style.top = source_y + 'px'
+        newImage.style.top = source_y + 'px';
+
+        // Assigning a class name
+        newImage.className = "blinkk";
+
+
+
+        // Open a messaging window on click
+
+
+        // Add an element to the HTML document
+        document.body.appendChild(newImage);
+
+        newImage.click(function () {
+            console.log("hello");
+        });
 
     }
 
@@ -56,6 +66,10 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
         var y = position.top;
         y -=32;
 
+        // Assign an ID to an element
+        id = "location" + "div" + j;
+        setAttributes(divs[j], {"ab_id": id});
+
         // Create comment image
         PlaceImage(x, y, imageUrl);
     }
@@ -75,8 +89,6 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
 
 // THIS PART IS FOR THE ACTUAL COMMENTING FUNCTIONALITY
 
-//var blinks = document.querySelector(".blink").on
-
 // Adds several attributes to a single HTML element - Helper function
 function setAttributes(element, attributes) {
     for(var attribute in attributes) {
@@ -84,25 +96,13 @@ function setAttributes(element, attributes) {
     }
 }
 
-
-
-// TO-DO: rewrite this function using the information from the StackOverflow question
 // Adds several styling attributes to a single HTML element - Helper function
-// http://stackoverflow.com/questions/24854692/whats-wrong-with-newchat-style-setattributewidth-100px-in-content-scrip?noredirect=1#24854880
 
 function setStylingAttributes(element, stylingAttributes) {
     for(var attribute in stylingAttributes) {
         element.style.setProperty(attribute, stylingAttributes[attribute]);
     }
 }
-
-/*
-function setStylingAttributes(element, stylingAttributes) {
-    for(var attribute in stylingAttributes) {
-        element.style.setAttribute(attribute, stylingAttributes[attribute]);
-    }
-}
-*/
 
 // Create a chat window
 function createChat() {
@@ -118,25 +118,15 @@ function createChat() {
                                    "position": "absolute",
                                    "top": "0",
                                    "right": "0",
-                                   "backgroundColor": "white",
+                                   "color": "dodgerblue",
+                                   // For some reason not all Attributes work. Eg. background-color doesn't work
+                                   "background-color": "dogerblue",
+                                   "border": "5px",
                                    "borderStyle": "solid",
-                                   "borderWidth": "5",
+                                   "borderWidth": "5px",
                                    "borderColor": "black",
                                    "zIndex": "99"
     });
-
-    /*
-    newChat.style.width = "300px";
-    newChat.style.height = "700px";
-    newChat.style.position = "absolute";
-    newChat.style.top = "0";
-    newChat.style.right = "0";
-    newChat.style.backgroundColor = "white";
-    newChat.style.borderWidth = "5";
-    newChat.style.borderColor = "black";
-    */
-
-    //newChat.style.zIndex = "999";
 
     var user1 = chrome.extension.getURL("icons/user1.jpg");
     var user2 = chrome.extension.getURL("icons/user2.jpg");
@@ -158,143 +148,100 @@ function createChat() {
 
     newChat.innerHTML = myHTML;
 
-    /*
-
-    //newChat.style.setAttribute("width", "100px");
-    //setAttribute("width", "100px");
-    //newChat.style.setAttribute("position", "absolute");
-
-    /*
-
-    setStylingAttributes(newChat, {"width": "100px",
-                                   "position": "absolute"
-    });
-
-    */
-
-    //newChat.setAttribute("id", "dialog");
-    //newChat.setAttribute("title", "Basic dialog");
-    //newChat.setAttribute("display", "none");
-
     //newChat.innerHTML = "<p>People online:</p>";
     document.body.appendChild(newChat);
 }
 
-$(document).ready(function () {
-    $(".label-key").click(function () {
-        createChat();
-        //document.getElementById('dialog').dialog();
-        //$('#dialog').dialog();
-    });
+/*
+
+function testingFunction(info, tab) {
+    console.log("Testing is OK!");
+    console.log(info + "a" + tab);
+}
+
+*/
+
+chrome.runtime.sendMessage({start: "ok"}, function(response) {
+    console.log(response.farewell);
+});
+
+$('.label-key').mousedown(function(event) {
+    var greeting = this.innerHTML;
+    console.log(greeting);
+    switch (event.which) {
+        case 1:
+            alert('Left Mouse button pressed.');
+            break;
+        case 2:
+            alert('Middle Mouse button pressed.');
+            break;
+        case 3:
+            chrome.runtime.sendMessage({greet: greeting}, function(response) {
+                console.log(response.farewell);
+            });
+            break;
+        default:
+            alert('You have a strange Mouse!');
+    }
 });
 
 
 
-// Rewriting
+
+
+var newDiv = document.createElement("div");
+document.body.appendChild(newDiv);
+newDiv.style.width = "100px";
+newDiv.style.height = "100px";
+newDiv.style.backgroundColor = "red";
+newDiv.className = "blinkkk";
+
+$(".blinkkk").click(function () {
+    console.log("JU");
+    createChat();
+    //document.getElementById('dialog').dialog();
+    //$('#dialog').dialog();
+});
 
 /*
 
-var startingComments =  {
+// Channel API Implementation
 
-    onReady: function() {
-        $(".label-key").click(function(){
-            var my_test = chrome.extension.getBackgroundPage().getElementById("dialog");
-            //$('#dialog').dialog();
-            console.log(my_test);
-        })
-    }
+sendMessage = function(path) {
+    path += "path"; // This should be a path which will be sent by xhr
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', path, true);
+    xhr.send();
+}
 
+onOpened = function() {
+    sendMessage('/opened');
+}
 
+onMessage = function(m) {
+    newState = JSON.parse(m.data);
+    // in the original one this was mainly state update and updateGame() call
+}
+
+openChannel = function() {
+    var token = '{{ token }}';
+    var channel = new goog.appengine.Channel(token);
+    var handler = {
+        'onopen': onOpened,
+        'onmessage': onMessage,
+        'onerror': function() {},
+        'onclose': function() {}
     };
+    var socket = channel.open(handler);
+    socket.onopen = onOpened;
+    socket.onmessage = onMessage;
+}
 
-$( document).ready( startingComments.onReady );
+initialize = function() {
+    openChannel();
+    onMessage({data: '{{ initial_message }}'});
+}
 
-*/
-
-/*
-
-// BETTER
-var PI = {
-
-    onReady: function() {
-        $( "#magic" ).click( PI.candyMtn );
-        $( "#happiness" ).load( PI.url + " #unicorns", PI.unicornCb );
-    },
-
-    candyMtn: function( event ) {
-        $( "#yayeffects" ).slideUp( PI.slideCb );
-    },
-
-    slideCb: function() { ... },
-
-    unicornCb: function() { ... }
-
-};
-
-$( document ).ready( PI.onReady );
-
-*/
-
-/*
-
-$(document).ready.$(".label-key").click(function() {
-    // Testing
-    console.alert("Hello there");
-
-    // Holds the product ID of the clicked element
-    //var productId = $(this).attr('class').replace('addproduct ', '');
-
-    //addToCart(productId);
-});
-
-*/
-
-/*
-
-$(function() {
-    $( ".dialog" ).dialog();
-});
-
-*/
-
-/*
-
-chrome.extension.onMessage.addListener(function(message, sender, sendRespone) {
-    var links = document.getElementsByTagName("a");
-    //var images = document.getElementsByTagName("img");
-    var divs = document.getElementsByTagName("div");
-    //var lists = document.getElementsByTagName("ul");
-    //var listElements = document.getElementsByTagName("li");
-
-    // Links
-    for(var i=0; i<links.length; i++) {
-        divs[i].style.backgroundColor = "red";
-    }
-
-    // Divs
-    for(var j=0; j<divs.length; j++) {
-        divs[j].style.backgroundColor = "blue";
-    }
-    console.log(message.type);
-});
-
-/*
-
-/*
-
-chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
-	switch(message.type) {
-		case "colors-div":
-			var divs = document.querySelectorAll("div");
-			if(divs.length === 0) {
-				alert("There are no divs in the page.");
-			} else {
-				for(var i=0; i<divs.length; i++) {
-					divs[i].style.backgroundColor = message.color;
-				}
-			}
-		break;
-	}
-});
+setTimeout(initialize, 100);
 
 */
