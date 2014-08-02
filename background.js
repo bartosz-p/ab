@@ -1,21 +1,123 @@
+chrome.contextMenus.create({"id": "myContextMenu","title": "Chunk it!", "contexts":["all"],
+    "onclick": function testingFunction(info, tab) {
+
+        alert(my_url);
+
+        if (info.url) {
+            //alert(info.url);
+            //alert(info.contents);
+            //alert(info.closestId);
+        } else {
+            //alert("Just start");
+            //alert(info.selectionText);
+            //alert(info.pageUrl);
+            //alert(info.linkUrl);
+        }
+    }});
+
+chrome.contextMenus.onClicked.addListener(function testFunc2(info, tab) {
+    //alert("test1");
+    alert(Object.keys(info));
+    chrome.tabs.sendMessage(tabs[0].id, {contentInfo: "OK"}, function(response) {});
+    //alert(info.contents);
+    //alert(info.closestId);
+});
+
+var my_url;
+var my_contents;
+var my_closestId;
+
+chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.contents) {
+        my_url = message.url;
+        my_contents = message.contents;
+        my_closestId = message.closestId;
+
+        //alert(message.url);
+        //alert(message.contents);
+        //alert(message.closestId);
+    }
+});
+
+
+/*
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.start == "ok") {
         var parentTest = chrome.contextMenus.create({"id": "myContextMenu","title": "Chunk it!", "contexts":["all"],
             "onclick": function testingFunction(info, tab) {
+
                 // TO-DO: This function should be called when clicked on ContextMenu
                 alert("This should not show up");
             }});
     }
 });
 
+*/
+
+/*
+
+chrome.contextMenus.onClicked.addListener(function testFunc2(info, tab){
+    //alert("test1");
+    alert(info.url);
+    alert(info.contents);
+    alert(info.closestId);
+    /*
+    chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+
+        alert(message.contents);
+        alert(message.url);
+        alert(message.closestId);
+
+        if (message.url) {
+            alert("test2");
+            alert(message.url);
+            alert(message.closestId);
+        }
+
+    })
+         */
+//});
+
+
+/*
+
+chrome.contextMenus.onClicked.addListener(function testFunc2(info, tab){
+    // TO-DO: Here, we are going to send data to server in order to save it to a database
+
+    chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+        if (message.url) {
+
+    alert(message.url);
+    //alert(message.contents[message.contents.length - 1]);
+    //alert(typeof message.contents);
+    alert(message.closestId);
+            }
+    })
+)};
+
+
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.greet) {
+    if (message.url) {
+
         chrome.contextMenus.onClicked.addListener(function testFunc2(info, tab){
                 // TO-DO: Here, we are going to send data to server in order to save it to a database
 
                 //var data={"name": message.greet};
-                var data={"name": "5113880120393728"};
+
+                alert(message.url);
+                //alert(message.contents[message.contents.length - 1]);
+                //alert(typeof message.contents);
+                alert(message.closestId);
+
+
+                var data={"url": message.url,
+                          //"concept": "",
+                          "contents": message.contents,
+                          "media_type": "",
+                          "parent": "",
+                          "instruction_type": ""
+                };
 
                 $.ajax({
                     url: 'http://www.edu-atoms.appspot.com/comments_admin',
@@ -28,28 +130,38 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
                     }
                 });
 
-                /*
 
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://www.edu-atoms.appspot.com/", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4) {
-                        // innerText does not let the attacker inject HTML elements.
-                        //document.getElementById("resp").innerText = xhr.responseText;
-                        var resp = xhr.responseText;
-                        resp = resp[:10];
-                        alert(resp);
-                    }
-                };
-                xhr.send();
 
-                */
+                 def post(self):
+
+                 atom_name = self.request.get('atom_name',
+                 DEFAULT_ATOM_NAME)
+
+                 #atom = Atom(parent=atom_key(atom_name))
+                 atom = Atom()
+
+
+                 if users.get_current_user():
+                 atom.author = users.get_current_user()
+
+                 atom.link = self.request.get('link')
+                 atom.concept = self.request.get('concept')
+                 atom.media_type = self.request.get('media_type')
+                 atom.parent = self.request.get('parent')
+                 atom.instruction_type = self.request.get('instruction_type')
+
+                 atom.put()
+
+                 query_params = {'atom_name' : atom_name}
+                 self.redirect('/?' + urllib.urlencode(query_params))
+
+
             }
         )
     }
 });
 
-
+ */
 
 
 // Create a Context Menu

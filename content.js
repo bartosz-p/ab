@@ -165,29 +165,70 @@ chrome.runtime.sendMessage({start: "ok"}, function(response) {
     console.log(response.farewell);
 });
 
-$('.label-key').mousedown(function(event) {
-    var greeting = this.innerHTML;
-    console.log(greeting);
+var url;
+var contents;
+var rangeObject;
+var closestId;
+
+$(document).mousedown(function(event) {
+    //var contents = this.innerHTML;
+    //var contents = "contents text";
+
+
+    //alert(rangeObject);
+
+    /*
+
+    var userSelection;
+    if (window.getSelection) {
+        userSelection = window.getSelection();
+    }
+    else if (document.selection) { // should come last; Opera!
+        userSelection = document.selection.createRange();
+    }
+
+
+    if ($(this).closest('[id]').getAttribute('id')) {
+        var closestId = $(this).closest('[id]').attr('id');
+    }   else {
+        var closestId = "N/A";
+    }
+    */
+
+
     switch (event.which) {
-        case 1:
-            alert('Left Mouse button pressed.');
-            break;
-        case 2:
-            alert('Middle Mouse button pressed.');
-            break;
         case 3:
-            chrome.runtime.sendMessage({greet: greeting}, function(response) {
+
+            url = window.location.href;
+            contents = window.getSelection();
+            rangeObject = contents.anchorNode;
+            closestId = $(rangeObject).closest('[id]').attr('id');
+
+            console.log("closestId " + closestId);
+            console.log("url " + url);
+            console.log("contents" + contents);
+
+
+            chrome.runtime.sendMessage({contents: contents.toString(), url: url, closestId: closestId}, function(response) {
                 console.log(response.farewell);
             });
+
+
             break;
-        default:
-            alert('You have a strange Mouse!');
     }
 });
 
+/*
 
+chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+     if (message.contentInfo) {
+         chrome.runtime.sendMessage({contents: contents.toString(), url: url, closestId: closestId}, function(response) {
+             console.log(response.farewell);
+         });
+     }
+});
 
-
+*/
 
 var newDiv = document.createElement("div");
 document.body.appendChild(newDiv);
