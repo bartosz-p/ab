@@ -152,15 +152,6 @@ function createChat() {
     document.body.appendChild(newChat);
 }
 
-/*
-
-function testingFunction(info, tab) {
-    console.log("Testing is OK!");
-    console.log(info + "a" + tab);
-}
-
-*/
-
 chrome.runtime.sendMessage({start: "ok"}, function(response) {
     console.log(response.farewell);
 });
@@ -169,32 +160,9 @@ var url;
 var contents;
 var rangeObject;
 var closestId;
+var instruction_type;
 
 $(document).mousedown(function(event) {
-    //var contents = this.innerHTML;
-    //var contents = "contents text";
-
-
-    //alert(rangeObject);
-
-    /*
-
-    var userSelection;
-    if (window.getSelection) {
-        userSelection = window.getSelection();
-    }
-    else if (document.selection) { // should come last; Opera!
-        userSelection = document.selection.createRange();
-    }
-
-
-    if ($(this).closest('[id]').getAttribute('id')) {
-        var closestId = $(this).closest('[id]').attr('id');
-    }   else {
-        var closestId = "N/A";
-    }
-    */
-
 
     switch (event.which) {
         case 3:
@@ -203,13 +171,19 @@ $(document).mousedown(function(event) {
             contents = window.getSelection();
             rangeObject = contents.anchorNode;
             closestId = $(rangeObject).closest('[id]').attr('id');
+            instruction_type = event.target.nodeName;
 
             console.log("closestId " + closestId);
             console.log("url " + url);
             console.log("contents" + contents);
+            console.log("instruction_type" + Object.keys(this));
+            console.log("instruction_type: " + event.target.nodeName);
 
-
-            chrome.runtime.sendMessage({contents: contents.toString(), url: url, closestId: closestId}, function(response) {
+            chrome.runtime.sendMessage({contents: contents.toString(),
+                                        url: url,
+                                        closestId: closestId,
+                                        instruction_type: instruction_type},
+                function(response) {
                 console.log(response.farewell);
             });
 
@@ -218,17 +192,69 @@ $(document).mousedown(function(event) {
     }
 });
 
-/*
-
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
-     if (message.contentInfo) {
-         chrome.runtime.sendMessage({contents: contents.toString(), url: url, closestId: closestId}, function(response) {
-             console.log(response.farewell);
-         });
-     }
+   if (message.popup) {
+
+       // Grey area
+       var newDiv = document.createElement("div");
+       document.body.appendChild(newDiv);
+       newDiv.style.width = "200px";
+       newDiv.style.height = "200px";
+       newDiv.style.backgroundColor = "grey";
+       newDiv.className = "ChunkInfo";
+
+       // Form
+       var chunkForm = document.createElement("form");
+       newDiv.appendChild(chunkForm);
+
+       // Concept
+       var conceptText = document.createElement("b");
+       conceptText.innerHTML = "Concept";
+       chunkForm.appendChild(conceptText);
+       var conceptArea = document.createElement("textarea");
+       conceptArea.style.rows =  "3";
+       conceptArea.style.cols =  "60";
+       chunkForm.appendChild(conceptArea);
+
+       // Parent
+       var parentText = document.createElement("b");
+       parentText.innerHTML = "Parent";
+       chunkForm.appendChild(parentText);
+       var parentArea = document.createElement("textarea");
+       parentArea.style.rows =  "3";
+       parentArea.style.cols =  "60";
+       chunkForm.appendChild(parentArea);
+
+       // Medium type
+       var mediumSelect = document.createElement("select");
+       mediumSelect.name = "instruction_type";
+       var mediumOption1 = document.createElement("option");
+       var mediumOption2 = document.createElement("option");
+       mediumOption1.value = "theory";
+       mediumOption2.value = "practice";
+       mediumOption1.innerHTML = "Theory";
+       mediumOption2.innerHTML = "Practice";
+       mediumSelect.appendChild(mediumOption1);
+       mediumSelect.appendChild(mediumOption2);
+       chunkForm.appendChild(mediumSelect);
+
+       // Submit button
+       var chunkButton = document.createElement("button");
+       chunkButton.innerHTML = "My Button";
+       chunkForm.appendChild(chunkButton);
+
+       chunkButton.onclick = function () {
+           chrome.runtime.sendMessage({to_server: true,
+                   concept: conceptArea.value,
+                   parent: parentArea.value,
+                   medium: mediumSelect.value}
+           );
+       };
+
+       // Attach a function which sends 'to_server' to the button
+   }
 });
 
-*/
 
 var newDiv = document.createElement("div");
 document.body.appendChild(newDiv);

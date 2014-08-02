@@ -1,42 +1,75 @@
 chrome.contextMenus.create({"id": "myContextMenu","title": "Chunk it!", "contexts":["all"],
     "onclick": function testingFunction(info, tab) {
 
-        alert(my_url);
+        alert(Object.keys(info));
 
-        if (info.url) {
-            //alert(info.url);
-            //alert(info.contents);
-            //alert(info.closestId);
+        if (isFilled) {
+
         } else {
-            //alert("Just start");
-            //alert(info.selectionText);
-            //alert(info.pageUrl);
-            //alert(info.linkUrl);
-        }
-    }});
 
-chrome.contextMenus.onClicked.addListener(function testFunc2(info, tab) {
-    //alert("test1");
-    alert(Object.keys(info));
-    chrome.tabs.sendMessage(tabs[0].id, {contentInfo: "OK"}, function(response) {});
-    //alert(info.contents);
-    //alert(info.closestId);
-});
+            chrome.tabs.sendMessage(tab.id, {popup: true});
+
+
+        }
+
+    }});
 
 var my_url;
 var my_contents;
 var my_closestId;
+var isFilled;
+var instruction_type;
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
+
+    /*
     if (message.contents) {
         my_url = message.url;
         my_contents = message.contents;
         my_closestId = message.closestId;
-
-        //alert(message.url);
-        //alert(message.contents);
-        //alert(message.closestId);
     }
+    */
+
+    switch (true) {
+        case message.contents:
+
+            my_url = message.url;
+            my_contents = message.contents;
+            my_closestId = message.closestId;
+            instruction_type = message.instruction_type;
+
+            break;
+
+        case message.to_server:
+
+            alert("Sending a POST request" + message.concept + " " + message.instruction_type);
+
+
+
+            var data={"url": my_url,
+                "concept": message.concept,
+                "contents": my_contents,
+                "media_type": message.medium,
+                "parent": message.parent,
+                "instruction_type": instruction_type,
+                "closestId": my_closestId
+            };
+
+            $.ajax({
+                url: 'http://www.edu-atoms.appspot.com/comments_admin',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function(data,status){
+                    alert(data.name);
+                    alert("Data" + data +"status"+status);
+                }
+            });
+
+
+            break;
+    }
+
 });
 
 
