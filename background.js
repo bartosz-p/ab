@@ -1,16 +1,19 @@
 chrome.contextMenus.create({"id": "myContextMenu","title": "Chunk it!", "contexts":["all"],
     "onclick": function testingFunction(info, tab) {
 
+        chrome.tabs.sendMessage(tab.id, {popup: true});
+
+        /*
+
         alert(Object.keys(info));
 
         if (isFilled) {
 
         } else {
 
-            chrome.tabs.sendMessage(tab.id, {popup: true});
-
-
         }
+
+        */
 
     }});
 
@@ -18,7 +21,7 @@ var my_url;
 var my_contents;
 var my_closestId;
 var isFilled;
-var instruction_type;
+var my_media_type;
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
 
@@ -31,27 +34,35 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
     */
 
     switch (true) {
+
+        // First case is probably non needed
         case message.contents:
 
             my_url = message.url;
             my_contents = message.contents;
             my_closestId = message.closestId;
-            instruction_type = message.instruction_type;
+            my_media_type = message.media_type;
+
+            alert("workingggg");
 
             break;
 
         case message.to_server:
 
-            alert("Sending a POST request" + message.concept + " " + message.instruction_type);
-
-
+            alert("Media: " + message.media_type + "Instruction: " + message.instruction_type);
+            alert("closestId " + message.closestId);
+            alert("url " + message.url);
+            alert("contents " + message.contents);
+            alert("concept " + message.concept);
+            alert("parent " + message.parent);
+            //console.log("media_type" + Object.keys(this));
 
             var data={"url": my_url,
                 "concept": message.concept,
                 "contents": my_contents,
-                "media_type": message.medium,
+                "media_type": my_media_type,
                 "parent": message.parent,
-                "instruction_type": instruction_type,
+                "instruction_type": message.instruction_type,
                 "closestId": my_closestId
             };
 

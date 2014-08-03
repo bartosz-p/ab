@@ -160,7 +160,7 @@ var url;
 var contents;
 var rangeObject;
 var closestId;
-var instruction_type;
+var media_type;
 
 $(document).mousedown(function(event) {
 
@@ -168,25 +168,33 @@ $(document).mousedown(function(event) {
         case 3:
 
             url = window.location.href;
-            contents = window.getSelection();
+
+            // Contents
+            if (window.getSelection()) {
+                contents = window.getSelection();
+            } else {
+                contents = "Empty";
+            }
+
             rangeObject = contents.anchorNode;
             closestId = $(rangeObject).closest('[id]').attr('id');
-            instruction_type = event.target.nodeName;
+            media_type = event.target.nodeName;
+            contents = contents.toString();
 
-            console.log("closestId " + closestId);
-            console.log("url " + url);
-            console.log("contents" + contents);
-            console.log("instruction_type" + Object.keys(this));
-            console.log("instruction_type: " + event.target.nodeName);
+            console.log("closestId " + typeof closestId);
+            console.log("url " +typeof url);
+            console.log("contents " +typeof contents);
+            //console.log("media_type" + Object.keys(this));
+            console.log("media_type: " +typeof event.target.nodeName);
 
-            chrome.runtime.sendMessage({contents: contents.toString(),
+            /*
+
+            chrome.runtime.sendMessage({contents: contents,
                                         url: url,
                                         closestId: closestId,
-                                        instruction_type: instruction_type},
-                function(response) {
-                console.log(response.farewell);
-            });
+                                        media_type: media_type});
 
+            */
 
             break;
     }
@@ -226,17 +234,17 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
        chunkForm.appendChild(parentArea);
 
        // Medium type
-       var mediumSelect = document.createElement("select");
-       mediumSelect.name = "instruction_type";
-       var mediumOption1 = document.createElement("option");
-       var mediumOption2 = document.createElement("option");
-       mediumOption1.value = "theory";
-       mediumOption2.value = "practice";
-       mediumOption1.innerHTML = "Theory";
-       mediumOption2.innerHTML = "Practice";
-       mediumSelect.appendChild(mediumOption1);
-       mediumSelect.appendChild(mediumOption2);
-       chunkForm.appendChild(mediumSelect);
+       var instructionSelect = document.createElement("select");
+       instructionSelect.name = "instruction_type";
+       var instructionOption1 = document.createElement("option");
+       var instructionOption2 = document.createElement("option");
+       instructionOption1.value = "theory";
+       instructionOption2.value = "practice";
+       instructionOption1.innerHTML = "Theory";
+       instructionOption2.innerHTML = "Practice";
+       instructionSelect.appendChild(instructionOption1);
+       instructionSelect.appendChild(instructionOption2);
+       chunkForm.appendChild(instructionSelect);
 
        // Submit button
        var chunkButton = document.createElement("button");
@@ -247,7 +255,12 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
            chrome.runtime.sendMessage({to_server: true,
                    concept: conceptArea.value,
                    parent: parentArea.value,
-                   medium: mediumSelect.value}
+                   instruction_type: instructionSelect.value,
+                   media_type: media_type,
+                   contents: contents,
+                   url: url,
+                   closestId: closestId
+               }
            );
        };
 
