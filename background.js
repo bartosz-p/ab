@@ -3,77 +3,47 @@ chrome.contextMenus.create({"id": "myContextMenu","title": "Chunk it!", "context
 
         chrome.tabs.sendMessage(tab.id, {popup: true});
 
-        /*
-
-        alert(Object.keys(info));
-
-        if (isFilled) {
-
-        } else {
-
-        }
-
-        */
-
     }});
-
-var my_url;
-var my_contents;
-var my_closestId;
-var isFilled;
-var my_media_type;
 
 chrome.extension.onMessage.addListener(function (message, sender, sendResponse) {
 
-    /*
-    if (message.contents) {
-        my_url = message.url;
-        my_contents = message.contents;
-        my_closestId = message.closestId;
-    }
-    */
-
     switch (true) {
-
-        // First case is probably non needed
-        case message.contents:
-
-            my_url = message.url;
-            my_contents = message.contents;
-            my_closestId = message.closestId;
-            my_media_type = message.media_type;
-
-            alert("workingggg");
-
-            break;
 
         case message.to_server:
 
-            alert("Media: " + message.media_type + "Instruction: " + message.instruction_type);
-            alert("closestId " + message.closestId);
-            alert("url " + message.url);
-            alert("contents " + message.contents);
-            alert("concept " + message.concept);
-            alert("parent " + message.parent);
-            //console.log("media_type" + Object.keys(this));
+//            alert("Instruction: " + typeof message.instruction_type);
+//            alert("closestId " + typeof message.closestId);
+//            alert("url " + typeof message.url);
+//            alert("contents " + typeof message.contents);
+//            alert("concept " + typeof message.concept);
+//            alert("parent " + typeof message.parent);
+//            alert("media_type: " + typeof message.media_type);
 
-            var data={"url": my_url,
-                "concept": message.concept,
-                "contents": my_contents,
-                "media_type": my_media_type,
-                "parent": message.parent,
-                "instruction_type": message.instruction_type,
-                "closestId": my_closestId
+            var media_type;
+
+            if (message.media_type) {
+                media_type = 'text';
+            } else {
+                // Put video, image, and other types here with switch(true)
+            }
+
+            var data = {'link': message.url,
+                'concept': message.concept,
+                'contents': message.contents,
+                'media_type': media_type,
+                'parent': message.parent,
+                'instruction_type': message.instruction_type,
+                'closest_id': message.closestId
             };
 
             $.ajax({
-                url: 'http://www.edu-atoms.appspot.com/comments_admin',
+                url: 'http://edu-atoms.appspot.com/',
                 type: 'POST',
                 data: data,
-                dataType: 'json',
-                success: function(data,status){
-                    alert(data.name);
-                    alert("Data" + data +"status"+status);
+                contentType: "application/x-www-form-urlencoded",
+                //dataType: 'json',
+                success: function(){
+                    alert("Server received my data");
                 }
             });
 

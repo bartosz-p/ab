@@ -152,9 +152,12 @@ function createChat() {
     document.body.appendChild(newChat);
 }
 
+
+/*
 chrome.runtime.sendMessage({start: "ok"}, function(response) {
     console.log(response.farewell);
 });
+*/
 
 var url;
 var contents;
@@ -181,21 +184,11 @@ $(document).mousedown(function(event) {
             media_type = event.target.nodeName;
             contents = contents.toString();
 
-            console.log("closestId " + typeof closestId);
-            console.log("url " +typeof url);
-            console.log("contents " +typeof contents);
+            //console.log("closestId " + typeof closestId);
+            //console.log("url " +typeof url);
+            //console.log("contents " +typeof contents);
             //console.log("media_type" + Object.keys(this));
-            console.log("media_type: " +typeof event.target.nodeName);
-
-            /*
-
-            chrome.runtime.sendMessage({contents: contents,
-                                        url: url,
-                                        closestId: closestId,
-                                        media_type: media_type});
-
-            */
-
+            //console.log("media_type: " +typeof event.target.nodeName);
             break;
     }
 });
@@ -210,6 +203,9 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
        newDiv.style.height = "200px";
        newDiv.style.backgroundColor = "grey";
        newDiv.className = "ChunkInfo";
+       newDiv.style.position = "absolute";
+       newDiv.style.top = 0;
+       newDiv.style.right = 0;
 
        // Form
        var chunkForm = document.createElement("form");
@@ -263,8 +259,6 @@ chrome.extension.onMessage.addListener(function (message, sender, sendResponse) 
                }
            );
        };
-
-       // Attach a function which sends 'to_server' to the button
    }
 });
 
